@@ -1,6 +1,7 @@
 package com.imperial.client;
 
 import com.imperial.client.modules.*;
+import com.imperial.client.modules.Module;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ClientModInitializer;

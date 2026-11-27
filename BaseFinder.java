@@ -1,5 +1,7 @@
 package com.imperial.client.modules;
 
+import com.imperial.client.ImperialClient;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.tags.BlockTags;
