@@ -16,5 +16,6 @@
   "key.imperial_client.kill_aura": "Toggle KillAura",
   "key.imperial_client.auto_eat": "Toggle AutoEat",
   "key.imperial_client.coordinates": "Toggle Coordinates",
-  "key.imperial_client.fps": "Toggle FPS"
+  "key.imperial_client.fps": "Toggle FPS",
+  "key.imperial_client.mace_smash": "Toggle MaceSmash"
 }
