@@ -52,9 +52,11 @@ public final class ImperialScreen extends Screen {
                 .bounds(this.width / 2 - 40, panelTop + panelH - 24, 80, 18).build());
     }
 
+    // 1.21.11's Screen.render() already draws the blurred background once.
+    // Draw our panel inside renderBackground (after the blur) and do NOT call it from render().
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(g, mouseX, mouseY, partialTick);
         g.fill(panelLeft, panelTop, panelLeft + panelW, panelTop + panelH, PANEL);
         g.fill(panelLeft, panelTop, panelLeft + panelW, panelTop + 3, PURPLE);
         g.drawCenteredString(this.font, "IMPERIAL CLIENT", this.width / 2, panelTop + 10, 0xFFFFFFFF);
@@ -63,7 +65,6 @@ public final class ImperialScreen extends Screen {
         Module.Category[] cats = Module.Category.values();
         for (int c = 0; c < cats.length; c++)
             g.drawString(this.font, cats[c].label, panelLeft + 4 + GAP + c * (COL_W + GAP), panelTop + 38, PURPLE, true);
-        super.render(g, mouseX, mouseY, partialTick);
     }
 
     @Override
