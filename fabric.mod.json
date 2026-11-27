@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "imperial_client",
+  "version": "${version}",
+  "name": "IMPERIAL CLIENT",
+  "description": "Utility client for the Imperial anarchy SMP: ESP, BaseFinder, AutoTotem, Flight, XRay and more.",
+  "authors": ["Imperial"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/imperial_client/icon.png",
+  "environment": "client",
+  "entrypoints": { "client": ["com.imperial.client.ImperialClient"] },
+  "mixins": ["imperial_client.mixins.json"],
+  "depends": { "fabricloader": ">=0.18.0", "minecraft": "1.21.11", "java": ">=21", "fabric-api": "*" }
+}

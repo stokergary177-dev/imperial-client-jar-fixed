@@ -1,0 +1,8 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.imperial.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["BlockMixin"],
+  "injectors": { "defaultRequire": 0 }
+}

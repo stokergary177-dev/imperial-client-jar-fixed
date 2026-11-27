@@ -1,0 +1,20 @@
+{
+  "key.imperial_client.open_menu": "Open IMPERIAL menu",
+  "key.imperial_client.zoom": "Toggle Zoom",
+  "key.imperial_client.fullbright": "Toggle Fullbright",
+  "key.imperial_client.xray": "Toggle XRay",
+  "key.imperial_client.storage_esp": "Toggle StorageESP",
+  "key.imperial_client.base_finder": "Toggle BaseFinder",
+  "key.imperial_client.player_esp": "Toggle PlayerESP",
+  "key.imperial_client.tracers": "Toggle Tracers",
+  "key.imperial_client.flight": "Toggle Flight",
+  "key.imperial_client.nofall_mp": "Toggle NoFall",
+  "key.imperial_client.auto_sprint": "Toggle AutoSprint",
+  "key.imperial_client.auto_jump": "Toggle AutoJump",
+  "key.imperial_client.auto_totem": "Toggle AutoTotem",
+  "key.imperial_client.trigger_bot": "Toggle TriggerBot",
+  "key.imperial_client.kill_aura": "Toggle KillAura",
+  "key.imperial_client.auto_eat": "Toggle AutoEat",
+  "key.imperial_client.coordinates": "Toggle Coordinates",
+  "key.imperial_client.fps": "Toggle FPS"
+}
