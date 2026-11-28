@@ -37,7 +37,7 @@ public final class ImperialClient implements ClientModInitializer {
         MODULES.addAll(List.of(
                 new Zoom(), new Fullbright(), new XRay(), new StorageEsp(), new BaseFinder(), new PlayerEsp(), new Tracers(),
                 new Flight(), new NoFallMp(), new SimpleModules.AutoSprint(), new SimpleModules.AutoJump(),
-                new AutoTotem(), new SimpleModules.TriggerBot(), new SimpleModules.KillAura(), new MaceSmash(),
+                new AutoTotem(), new SimpleModules.TriggerBot(), new SimpleModules.KillAura(), new MaceSmash(), new LagSwitch(),
                 new AutoEat(), new SimpleModules.Coordinates(), new SimpleModules.Fps()));
 
         openMenu = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.imperial_client.open_menu",
