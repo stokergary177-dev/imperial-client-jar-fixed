@@ -29,7 +29,7 @@ public final class BaseFinder extends Module {
     private final List<Map.Entry<Long, Integer>> top = new ArrayList<>();
     private int ticks;
 
-    public BaseFinder() { super("base_finder", "BaseFinder", Category.RENDER); }
+    public BaseFinder() { super("base_finder", "BaseFinder", Category.WORLD); }
 
     @Override protected void onDisable(Minecraft mc) { scores.clear(); scannedAt.clear(); announced.clear(); top.clear(); }
 

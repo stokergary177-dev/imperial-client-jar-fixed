@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class Module {
     public enum Category {
-        RENDER("Render"), MOVEMENT("Movement"), COMBAT("Combat"), PLAYER("Player");
+        RENDER("Render"), WORLD("World"), MOVEMENT("Movement"), COMBAT("Combat"), PLAYER("Player");
         public final String label;
         Category(String label) { this.label = label; }
     }

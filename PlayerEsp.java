@@ -1,5 +1,6 @@
 package com.imperial.client.modules;
 
+import com.imperial.client.Friends;
 import com.imperial.client.ImperialClient;
 
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,8 @@ public final class PlayerEsp extends Module {
             if (o == mc.player || o.isSpectator()) continue;
             Vec3 lp = o.getPosition(delta);
             AABB box = o.getBoundingBox().move(lp.x - o.getX(), lp.y - o.getY(), lp.z - o.getZ());
-            if (p.drawBox(g, box, 0xFFFF3030, 0x20FF3030)) {
+            boolean fr = Friends.isFriend(o);
+            if (p.drawBox(g, box, fr ? 0xFF30FF30 : 0xFFFF3030, fr ? 0x2030FF30 : 0x20FF3030)) {
                 double[] top = p.project(lp.x, box.maxY + 0.3, lp.z);
                 if (top != null) {
                     String label = String.format(Locale.ROOT, "%s  %.0fhp  %.0fm", o.getName().getString(),

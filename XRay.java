@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /** Hides every block face except ores/valuables. Turn Fullbright on too so ores in caves are lit. */
 public final class XRay extends Module {
     private static volatile boolean active;
-    public XRay() { super("xray", "XRay", Category.RENDER, org.lwjgl.glfw.GLFW.GLFW_KEY_X); }
+    public XRay() { super("xray", "XRay", Category.WORLD, org.lwjgl.glfw.GLFW.GLFW_KEY_X); }
     @Override public boolean persist() { return false; }
 
     public static boolean active() { return active; }

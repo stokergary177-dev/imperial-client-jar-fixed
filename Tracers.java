@@ -1,5 +1,6 @@
 package com.imperial.client.modules;
 
+import com.imperial.client.Friends;
 import com.imperial.client.ImperialClient;
 
 import net.minecraft.client.Minecraft;
@@ -14,7 +15,7 @@ public final class Tracers extends Module {
         for (Player o : mc.level.players()) {
             if (o == mc.player || o.isSpectator()) continue;
             Vec3 lp = o.getPosition(delta);
-            ImperialClient.PROJECTOR.drawTracer(g, lp.x, lp.y + o.getBbHeight() / 2.0, lp.z, 0xCCFF3030);
+            ImperialClient.PROJECTOR.drawTracer(g, lp.x, lp.y + o.getBbHeight() / 2.0, lp.z, Friends.isFriend(o) ? 0xCC30FF30 : 0xCCFF3030);
         }
     }
 }

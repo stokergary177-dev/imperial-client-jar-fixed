@@ -20,7 +20,7 @@ public final class StorageEsp extends Module {
     private final List<Hit> hits = new ArrayList<>();
     private int ticks;
 
-    public StorageEsp() { super("storage_esp", "StorageESP", Category.RENDER); }
+    public StorageEsp() { super("storage_esp", "StorageESP", Category.WORLD); }
 
     @Override public void onTick(Minecraft mc) {
         if (ticks++ % 10 != 0) return;

@@ -13,8 +13,8 @@ import java.util.List;
 public final class ImperialScreen extends Screen {
     private static final int PURPLE = 0xFF9B59FF;
     private static final int PANEL = 0xE9151020;
-    private static final int COL_W = 96, BTN_H = 18, GAP = 4;
-    private int panelLeft, panelTop, panelW, panelH;
+    private static final int COL_W = 88, GAP = 4;
+    private int panelLeft, panelTop, panelW, panelH, btnH = 18;
 
     public ImperialScreen() { super(Component.literal("IMPERIAL CLIENT")); }
 
@@ -33,8 +33,10 @@ public final class ImperialScreen extends Screen {
             cols.add(l);
             tallest = Math.max(tallest, l.size());
         }
+        // shrink the buttons when the tallest column would not fit on screen
+        btnH = Math.max(12, Math.min(18, (this.height - 120) / Math.max(1, tallest) - GAP));
         panelW = cats.length * (COL_W + GAP) + GAP + 8;
-        panelH = 58 + tallest * (BTN_H + GAP) + 30;
+        panelH = 58 + tallest * (btnH + GAP) + 30;
         panelLeft = this.width / 2 - panelW / 2;
         panelTop = this.height / 2 - panelH / 2;
         for (int c = 0; c < cats.length; c++) {
@@ -44,12 +46,14 @@ public final class ImperialScreen extends Screen {
                 this.addRenderableWidget(Button.builder(label(m), b -> {
                     ImperialClient.toggle(this.minecraft, m);
                     b.setMessage(label(m));
-                }).bounds(x, y, COL_W, BTN_H).build());
-                y += BTN_H + GAP;
+                }).bounds(x, y, COL_W, btnH).build());
+                y += btnH + GAP;
             }
         }
+        this.addRenderableWidget(Button.builder(Component.literal("Settings"), b -> this.minecraft.setScreen(new SettingsScreen(this)))
+                .bounds(this.width / 2 - 84, panelTop + panelH - 24, 80, 18).build());
         this.addRenderableWidget(Button.builder(Component.literal("Close"), b -> this.onClose())
-                .bounds(this.width / 2 - 40, panelTop + panelH - 24, 80, 18).build());
+                .bounds(this.width / 2 + 4, panelTop + panelH - 24, 80, 18).build());
     }
 
     // 1.21.11's Screen.render() already draws the blurred background once.
@@ -60,7 +64,7 @@ public final class ImperialScreen extends Screen {
         g.fill(panelLeft, panelTop, panelLeft + panelW, panelTop + panelH, PANEL);
         g.fill(panelLeft, panelTop, panelLeft + panelW, panelTop + 3, PURPLE);
         g.drawCenteredString(this.font, "IMPERIAL CLIENT", this.width / 2, panelTop + 10, 0xFFFFFFFF);
-        g.drawCenteredString(this.font, "Right Shift: menu  |  /imperial <module>  |  bind keys in Controls",
+        g.drawCenteredString(this.font, "Right Shift: menu  |  /imperial <module>  |  /imperial friend add <name>",
                 this.width / 2, panelTop + 22, 0xFFB9A0D8);
         Module.Category[] cats = Module.Category.values();
         for (int c = 0; c < cats.length; c++)

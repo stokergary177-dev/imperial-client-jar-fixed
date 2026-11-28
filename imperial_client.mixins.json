@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "BlockMixin",
-    "ConnectionMixin"
+    "ConnectionMixin",
+    "VelocityMixin",
+    "HitboxMixin"
   ],
   "injectors": {
     "defaultRequire": 0

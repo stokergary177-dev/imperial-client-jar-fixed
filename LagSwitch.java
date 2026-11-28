@@ -34,14 +34,17 @@ public final class LagSwitch extends Module {
     private static final ArrayDeque<Packet<?>> QUEUE = new ArrayDeque<>();
     private static volatile boolean active;
     private static boolean releasing;
+    private static boolean sawPacket; // proves the ConnectionMixin hook is alive
+    private static LagSwitch instance;
     private int held;
 
-    public LagSwitch() { super("lag_switch", "LagSwitch", Category.COMBAT); }
+    public LagSwitch() { super("lag_switch", "LagSwitch", Category.COMBAT); instance = this; }
 
     @Override public boolean persist() { return false; }
 
     /** Called by ConnectionMixin for every outgoing packet. */
     public static boolean shouldHold(Packet<?> p) {
+        sawPacket = true;
         if (!active || releasing) return false;
         if (p instanceof ServerboundMovePlayerPacket) return true;
         if (!holdActions) return false;
@@ -53,7 +56,7 @@ public final class LagSwitch extends Module {
 
     public static synchronized void hold(Packet<?> packet) { QUEUE.add(packet); }
 
-    @Override protected void onEnable(Minecraft mc) { held = 0; active = true; }
+    @Override protected void onEnable(Minecraft mc) { held = 0; sawPacket = false; active = true; }
 
     @Override protected void onDisable(Minecraft mc) {
         active = false;
@@ -71,7 +74,23 @@ public final class LagSwitch extends Module {
         } finally { releasing = false; }
     }
 
+    /**
+     * Called every tick while no world is loaded (disconnect, kicked, returned to the menu). Drops anything still
+     * held and switches the module off, so packets from the old session can never leak into the next one.
+     */
+    public static void onDisconnect() {
+        if (instance != null && instance.isEnabled()) instance.setEnabled(false); // flush() discards: no connection
+        else synchronized (LagSwitch.class) { QUEUE.clear(); }
+        active = false;
+    }
+
     @Override public void onTick(Minecraft mc) {
+        if (mc.player.isDeadOrDying()) { setEnabled(false); return; }
+        if (held == 20 && !sawPacket) {
+            ImperialClient.notify(mc, "LagSwitch: packet hook is not active (Connection.send did not match this version)");
+            setEnabled(false);
+            return;
+        }
         if (++held >= maxTicks) {
             setEnabled(false); // releases the packets
             ImperialClient.notify(mc, "LagSwitch released");
