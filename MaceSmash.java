@@ -1,8 +1,12 @@
 package com.imperial.client.modules;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
 
@@ -18,8 +22,11 @@ import java.util.List;
  * fake jump is split into 2-4 packets that each stay under that limit. Needs free space above your head.
  */
 public final class MaceSmash extends Module {
-    /** Fake fall height in blocks (max 22 with the 4-packet plan). More = more damage. */
-    public static int maxHeight = 22;
+    /**
+     * Fake fall height in blocks (4-22). 9 or less = 2 packets (safest). More = more damage but more
+     * likely to be rejected (you get snapped into the air). Change in game with /mace <blocks>.
+     */
+    public static int maxHeight = 9;
     private static MaceSmash instance;
 
     public MaceSmash() {
@@ -36,6 +43,14 @@ public final class MaceSmash extends Module {
                 instance.smash(mc);
             return InteractionResult.PASS;
         });
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) ->
+                dispatcher.register(ClientCommandManager.literal("mace")
+                        .then(ClientCommandManager.argument("blocks", IntegerArgumentType.integer(4, 22))
+                                .executes(ctx -> {
+                                    maxHeight = IntegerArgumentType.getInteger(ctx, "blocks");
+                                    ctx.getSource().sendFeedback(Component.literal("[IMPERIAL] MaceSmash height = " + maxHeight + " blocks"));
+                                    return 1;
+                                }))));
     }
 
     private void smash(Minecraft mc) {
