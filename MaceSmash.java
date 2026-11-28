@@ -6,13 +6,19 @@ import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Mace smash exploit: before each melee hit with a mace, tells the server you went up and fell back down,
- * so the server counts a big fall and the mace does smash damage without you actually jumping.
- * Works on servers that don't check movement strictly (e.g. most anarchy servers). Needs clear space above you.
+ * Mace smash from the ground. Right before a melee hit with a mace, we send the server a short chain of
+ * position packets (up, then back down to where you really are, never "on ground"), so the server thinks
+ * you fell and the mace does smash damage.
+ *
+ * A vanilla/Paper server allows the Nth move packet of a tick to travel about sqrt(100*N) blocks, so the
+ * fake jump is split into 2-4 packets that each stay under that limit. Needs free space above your head.
  */
 public final class MaceSmash extends Module {
-    /** Max fake fall height in blocks. More = more damage, but servers reject moves above ~100. */
+    /** Fake fall height in blocks (max 22 with the 4-packet plan). More = more damage. */
     public static int maxHeight = 22;
     private static MaceSmash instance;
 
@@ -36,14 +42,25 @@ public final class MaceSmash extends Module {
         var p = mc.player;
         var conn = mc.getConnection();
         if (conn == null || !p.getMainHandItem().is(Items.MACE)) return;
-        if (!p.onGround() && p.fallDistance > 1.5) return; // already falling: a real smash works
+        if (!p.onGround() && p.fallDistance > 1.5) return; // really falling already: normal smash works
 
-        int h = 0; // how many blocks of free space above us
-        while (h < maxHeight && mc.level.noCollision(p, p.getBoundingBox().move(0, h + 1, 0))) h++;
-        if (h < 3) return;
+        // free blocks above our head
+        int h = 0;
+        while (h < Math.min(maxHeight, 22) && mc.level.noCollision(p, p.getBoundingBox().move(0, h + 1, 0))) h++;
+        if (h < 4) return; // no room, don't risk a rubberband
 
         double x = p.getX(), y = p.getY(), z = p.getZ();
-        conn.send(new ServerboundMovePlayerPacket.Pos(x, y + h, z, false, false));
-        conn.send(new ServerboundMovePlayerPacket.Pos(x, y, z, false, p.horizontalCollision));
+        List<Double> ys = new ArrayList<>();
+        double up1 = Math.min(h, 9.5);          // packet 1: limit ~10 blocks
+        ys.add(y + up1);
+        if (h - up1 > 0.001) ys.add(y + h);     // packet 2: limit ~14 blocks
+        double down1 = Math.min(h, 16.5);       // packet 3: limit ~17 blocks
+        if (h - down1 > 0.001) { ys.add(y + h - down1); ys.add(y); } // packet 4 = back to the real spot
+        else ys.add(y);
+
+        for (int i = 0; i < ys.size(); i++) {
+            boolean last = i == ys.size() - 1;
+            conn.send(new ServerboundMovePlayerPacket.Pos(x, ys.get(i), z, false, last && p.horizontalCollision));
+        }
     }
 }
